@@ -1,0 +1,660 @@
+<!-- 
+    INSTRUÇÕES PARA BLOGGER:
+    1. Crie uma nova Página ou Post no Blogger.
+    2. Mude para o modo "Visualização HTML" (ícone <>).
+    3. Cole todo o código abaixo.
+    4. IMPORTANTE: Você precisa ter o backend (servidor Node.js) hospedado em algum lugar (ex: Render, Railway, Google Cloud).
+    5. Substitua 'https://SEU-BACKEND-AQUI.com' pela URL do seu servidor hospedado na variável API_BASE_URL abaixo.
+-->
+
+<style>
+    :root {
+        --primary: #6366f1;
+        --secondary: #a855f7;
+        --accent: #ec4899;
+        --background: #0f172a;
+        --surface: #1e293b;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --glass: rgba(30, 41, 59, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Reset básico para garantir que o estilo funcione dentro do Blogger */
+    #buscapreco-app * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+
+    #buscapreco-app {
+        background-color: var(--background);
+        color: var(--text);
+        min-height: 800px;
+        /* Altura mínima para o iframe/container */
+        background-image:
+            radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
+        background-attachment: fixed;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    #buscapreco-app .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    #buscapreco-app header {
+        text-align: center;
+        margin-bottom: 4rem;
+        padding-top: 2rem;
+        animation: fadeInDown 0.8s ease-out;
+    }
+
+    #buscapreco-app h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 1rem;
+        letter-spacing: -0.05em;
+        line-height: 1.2;
+    }
+
+    #buscapreco-app .subtitle {
+        color: var(--text-muted);
+        font-size: 1.2rem;
+    }
+
+    #buscapreco-app .search-box {
+        max-width: 600px;
+        margin: 0 auto 4rem;
+        position: relative;
+        animation: fadeInUp 0.8s ease-out 0.2s backwards;
+    }
+
+    #buscapreco-app .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    #buscapreco-app input {
+        width: 100%;
+        padding: 1.2rem 1.5rem;
+        padding-right: 4rem;
+        font-size: 1.1rem;
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 1rem;
+        color: var(--text);
+        backdrop-filter: blur(12px);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    #buscapreco-app input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+    }
+
+    #buscapreco-app .search-btn {
+        position: absolute;
+        right: 0.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border: none;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 0.8rem;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #buscapreco-app .search-btn:hover {
+        transform: scale(1.05);
+    }
+
+    #buscapreco-app .search-btn svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    #buscapreco-app .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        animation: fadeInUp 0.8s ease-out 0.4s backwards;
+    }
+
+    #buscapreco-app .product-card {
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(12px);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    #buscapreco-app .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: var(--primary);
+    }
+
+    #buscapreco-app .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+        background: white;
+        padding: 1rem;
+    }
+
+    #buscapreco-app .product-info {
+        padding: 1.5rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #buscapreco-app .store-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+    }
+
+    #buscapreco-app .product-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        color: var(--text);
+    }
+
+    #buscapreco-app .product-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-top: auto;
+        margin-bottom: 1rem;
+    }
+
+    #buscapreco-app .view-btn {
+        display: block;
+        width: 100%;
+        padding: 0.8rem;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    #buscapreco-app .view-btn:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    #buscapreco-app .loader {
+        display: none;
+        justify-content: center;
+        margin: 4rem 0;
+    }
+
+    #buscapreco-app .spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    #buscapreco-app .empty-state {
+        text-align: center;
+        color: var(--text-muted);
+        grid-column: 1 / -1;
+        padding: 4rem;
+        background: var(--glass);
+        border-radius: 1rem;
+        border: 1px solid var(--glass-border);
+    }
+
+    /* Modal styles */
+    #buscapreco-app .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+    }
+
+    #buscapreco-app .modal-content {
+        background-color: #1a1a1a;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #333;
+        width: 80%;
+        max-width: 800px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    #buscapreco-app .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    #buscapreco-app .close:hover,
+    #buscapreco-app .close:focus {
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    #buscapreco-app .history-btn-container {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #buscapreco-app .history-btn {
+        background-color: var(--primary);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+    #buscapreco-app .history-btn:hover {
+        background-color: #1d4ed8;
+        transform: translateY(-2px);
+    }
+
+    /* Search Status Styles */
+    #buscapreco-app .search-status {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background: var(--glass);
+        border: 1px solid var(--glass-border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        justify-content: center;
+        animation: fadeInDown 0.5s ease-out;
+    }
+
+    #buscapreco-app .status-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+    }
+
+    #buscapreco-app .status-success {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    #buscapreco-app .status-failed {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    #buscapreco-app .error-details {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-family: monospace;
+    }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<div id="buscapreco-app">
+    <div class="container">
+        <header>
+            <h1>BuscaPreço</h1>
+            <p class="subtitle">Encontre o menor preço em todo o Brasil</p>
+        </header>
+
+        <div class="search-box">
+            <div class="input-group">
+                <input type="text" id="searchInput" placeholder="O que você está procurando hoje?" autocomplete="off">
+                <button class="search-btn" id="searchBtn" aria-label="Buscar">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+        </div>
+
+        <div class="search-status" id="searchStatus" style="display: none;">
+            <!-- Status will be injected here -->
+        </div>
+
+        <div class="results-grid" id="resultsGrid">
+            <!-- Results will be injected here -->
+        </div>
+
+        <div id="historyModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Histórico de Preços</h2>
+                <canvas id="priceChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // ==========================================
+    // CONFIGURAÇÃO
+    // ==========================================
+    // Substitua pela URL do seu backend hospedado (ex: https://meu-app.onrender.com)
+    // Se estiver testando localmente, use http://localhost:3000
+    const API_BASE_URL = 'http://localhost:3001';
+    // ==========================================
+
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsGrid = document.getElementById('resultsGrid');
+    const loader = document.getElementById('loader');
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(price);
+    }
+
+    async function searchProducts() {
+        const query = searchInput.value.trim();
+        if (!query) return;
+
+        // Clear previous results and show loader
+        resultsGrid.innerHTML = '';
+        const searchStatus = document.getElementById('searchStatus');
+        if (searchStatus) {
+            searchStatus.innerHTML = '';
+            searchStatus.style.display = 'none';
+        }
+        loader.style.display = 'flex';
+
+        try {
+            // Updated to use API_BASE_URL
+            const response = await fetch(`${API_BASE_URL}/api/search?q=${encodeURIComponent(query)}`);
+            if (!response.ok) {
+                throw new Error(`Erro no servidor: ${response.statusText}`);
+            }
+            const responseData = await response.json();
+
+            const products = responseData.results || [];
+            const status = responseData.status;
+
+            loader.style.display = 'none';
+
+            // Display Status
+            if (status && searchStatus) {
+                let statusHtml = '';
+
+                if (status.success && status.success.length > 0) {
+                    status.success.forEach(store => {
+                        statusHtml += `<div class="status-item status-success">✓ ${store}</div>`;
+                    });
+                }
+
+                if (status.failed && status.failed.length > 0) {
+                    status.failed.forEach(store => {
+                        statusHtml += `<div class="status-item status-failed">✕ ${store}</div>`;
+                    });
+                }
+
+                if (statusHtml) {
+                    searchStatus.innerHTML = statusHtml;
+                    searchStatus.style.display = 'flex';
+                }
+            }
+
+            if (products.length === 0) {
+                resultsGrid.innerHTML = `
+                <div class="empty-state">
+                    <h3>Nenhum produto encontrado</h3>
+                    <p>Tente buscar com termos diferentes</p>
+                </div>
+            `;
+                return;
+            }
+
+            // Add history button
+            const historyBtnContainer = document.createElement('div');
+            historyBtnContainer.className = 'history-btn-container';
+            historyBtnContainer.innerHTML = `<button class="history-btn" onclick="showHistory('${query.replace(/'/g, "\\'")}')">Ver Histórico de Preços</button>`;
+            resultsGrid.appendChild(historyBtnContainer);
+
+            // Show button
+            setTimeout(() => {
+                const btn = document.querySelector('.history-btn');
+                if (btn) btn.style.display = 'inline-block';
+            }, 100);
+
+            products.forEach((product, index) => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+
+                card.innerHTML = `
+                <span class="store-badge">${product.store}</span>
+                <img src="${product.image}" alt="${product.title}" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title" title="${product.title}">${product.title}</h3>
+                    <div class="product-price">${formatPrice(product.price)}</div>
+                    <a href="${product.link}" target="_blank" class="view-btn">Ver na Loja</a>
+                </div>
+            `;
+
+                resultsGrid.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error('Error:', error);
+            loader.style.display = 'none';
+            resultsGrid.innerHTML = `
+            <div class="empty-state">
+                <h3>Erro ao buscar produtos</h3>
+                <p>Ocorreu um erro ao tentar buscar os produtos. Tente novamente.</p>
+                <p class="error-details">${error.message}</p>
+                <p style="font-size: 0.8rem; margin-top: 10px; color: #f87171;">
+                    Nota: Se você está vendo este erro no Blogger, verifique se o backend está rodando e acessível (CORS habilitado).
+                </p>
+            </div>
+        `;
+        }
+    }
+
+    searchBtn.addEventListener('click', searchProducts);
+
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchProducts();
+        }
+    });
+
+    // History Modal Logic
+    const modal = document.getElementById("historyModal");
+    const span = document.getElementsByClassName("close")[0];
+    let priceChart = null;
+
+    if (span) {
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    async function showHistory(query) {
+        modal.style.display = "block";
+
+        try {
+            // Updated to use API_BASE_URL
+            const response = await fetch(`${API_BASE_URL}/api/history?q=${encodeURIComponent(query)}`);
+            const historyData = await response.json();
+
+            renderChart(historyData);
+        } catch (error) {
+            console.error('Error fetching history:', error);
+        }
+    }
+
+    function renderChart(data) {
+        const ctx = document.getElementById('priceChart').getContext('2d');
+
+        // Sort data by timestamp
+        data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+        const labels = data.map(d => {
+            const date = new Date(d.timestamp);
+            return date.toLocaleDateString('pt-BR');
+        });
+
+        const prices = data.map(d => d.minPrice);
+
+        if (priceChart) {
+            priceChart.destroy();
+        }
+
+        priceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Menor Preço Encontrado (R$)',
+                    data: prices,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#fff'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#aaa',
+                            callback: function (value) {
+                                return 'R$ ' + value.toFixed(2);
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#aaa'
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>

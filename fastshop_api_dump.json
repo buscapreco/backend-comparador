@@ -1,0 +1,623 @@
+{
+  "node": {
+    "additionalProperty": [],
+    "advertisement": null,
+    "brand": {
+      "brandName": "SAMSUNG",
+      "name": "SAMSUNG"
+    },
+    "gtin": "4000076035",
+    "image": [
+      {
+        "alternateName": "",
+        "url": "https://fastshopbr.vtexassets.com/arquivos/ids/2858515/17643426652271.jpg?v=638999395870130000"
+      },
+      {
+        "alternateName": "",
+        "url": "https://fastshopbr.vtexassets.com/arquivos/ids/2858525/17643426655591.jpg?v=638999395876930000"
+      },
+      {
+        "alternateName": "",
+        "url": "https://fastshopbr.vtexassets.com/arquivos/ids/2858536/17643426659235.jpg?v=638999395881500000"
+      },
+      {
+        "alternateName": "",
+        "url": "https://fastshopbr.vtexassets.com/arquivos/ids/2858537/17643426661149.jpg?v=638999395886930000"
+      },
+      {
+        "alternateName": "",
+        "url": "https://fastshopbr.vtexassets.com/arquivos/ids/2858538/17643426662841.jpg?v=638999395893300000"
+      }
+    ],
+    "isVariantOf": {
+      "name": "Tablet Samsung Galaxy S10 Lite 10.9\" Android 15 128GB Exynos 1380 Wi-fi 8MP Caneta S Pen Capa Protetora Cinza",
+      "productGroupID": "137012",
+      "skuVariants": {
+        "activeVariations": {},
+        "allVariantsByName": {},
+        "availableVariations": {},
+        "slugsMap": {}
+      }
+    },
+    "name": "Tablet Samsung Galaxy S10 Lite 10.9\" Android 15 128GB Exynos 1380 Wi-fi 8MP Caneta S Pen Capa Protetora Cinza",
+    "offers": {
+      "lowPrice": 1664.06,
+      "lowPriceWithTaxes": 1664.06,
+      "offers": [
+        {
+          "availability": "https://schema.org/InStock",
+          "listPrice": 1848.96,
+          "listPriceWithTaxes": 1848.96,
+          "price": 1664.06,
+          "quantity": 10000,
+          "seller": {
+            "identifier": "cnl222"
+          },
+          "priceWithTaxes": 1664.06
+        },
+        {
+          "availability": "https://schema.org/OutOfStock",
+          "listPrice": 0,
+          "listPriceWithTaxes": 0,
+          "price": 0,
+          "quantity": 0,
+          "seller": {
+            "identifier": "1"
+          },
+          "priceWithTaxes": 0
+        }
+      ],
+      "highPrice": 1664.06
+    },
+    "id": "145571",
+    "sku": "145571",
+    "slug": "tablet-samsung-galaxy-s10-lite-10-9--android-15-128gb-exynos-1380-wi-fi-8mp-caneta-s-pen-capa-protetora-cinza-137012-145571",
+    "categories": [
+      "/Smartphones e Tablets/Tablets/Tablet Com Wi-Fi/",
+      "/Smartphones e Tablets/Tablets/",
+      "/Smartphones e Tablets/"
+    ],
+    "categoryId": "553",
+    "clusterHighlights": [
+      {
+        "id": "257",
+        "name": "XML Mídias e Insider 1P-3P"
+      },
+      {
+        "id": "1043",
+        "name": "Frete Gratis  Seller 3p"
+      }
+    ],
+    "installments": [
+      {
+        "InterestRate": 0,
+        "Name": "American Express à vista",
+        "NumberOfInstallments": 1,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "American Express",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 1848.96
+      },
+      {
+        "InterestRate": 0,
+        "Name": "American Express 2 vezes sem juros",
+        "NumberOfInstallments": 2,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "American Express",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 924.48
+      },
+      {
+        "InterestRate": 0,
+        "Name": "American Express 3 vezes sem juros",
+        "NumberOfInstallments": 3,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "American Express",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 616.32
+      },
+      {
+        "InterestRate": 0,
+        "Name": "American Express 4 vezes sem juros",
+        "NumberOfInstallments": 4,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "American Express",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 462.24
+      },
+      {
+        "InterestRate": 0,
+        "Name": "American Express 5 vezes sem juros",
+        "NumberOfInstallments": 5,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "American Express",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 369.79
+      },
+      {
+        "InterestRate": 0,
+        "Name": "American Express 6 vezes sem juros",
+        "NumberOfInstallments": 6,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "American Express",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 308.16
+      },
+      {
+        "InterestRate": 0,
+        "Name": "American Express 7 vezes sem juros",
+        "NumberOfInstallments": 7,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "American Express",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 264.13
+      },
+      {
+        "InterestRate": 0,
+        "Name": "American Express 8 vezes sem juros",
+        "NumberOfInstallments": 8,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "American Express",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 231.12
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Visa à vista",
+        "NumberOfInstallments": 1,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Visa",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 1848.96
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Visa 2 vezes sem juros",
+        "NumberOfInstallments": 2,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Visa",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 924.48
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Visa 3 vezes sem juros",
+        "NumberOfInstallments": 3,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Visa",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 616.32
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Visa 4 vezes sem juros",
+        "NumberOfInstallments": 4,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Visa",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 462.24
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Visa 5 vezes sem juros",
+        "NumberOfInstallments": 5,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Visa",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 369.79
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Visa 6 vezes sem juros",
+        "NumberOfInstallments": 6,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Visa",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 308.16
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Visa 7 vezes sem juros",
+        "NumberOfInstallments": 7,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Visa",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 264.13
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Visa 8 vezes sem juros",
+        "NumberOfInstallments": 8,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Visa",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 231.12
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Diners à vista",
+        "NumberOfInstallments": 1,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Diners",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 1848.96
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Diners 2 vezes sem juros",
+        "NumberOfInstallments": 2,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Diners",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 924.48
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Diners 3 vezes sem juros",
+        "NumberOfInstallments": 3,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Diners",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 616.32
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Diners 4 vezes sem juros",
+        "NumberOfInstallments": 4,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Diners",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 462.24
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Diners 5 vezes sem juros",
+        "NumberOfInstallments": 5,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Diners",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 369.79
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Diners 6 vezes sem juros",
+        "NumberOfInstallments": 6,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Diners",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 308.16
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Diners 7 vezes sem juros",
+        "NumberOfInstallments": 7,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Diners",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 264.13
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Diners 8 vezes sem juros",
+        "NumberOfInstallments": 8,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Diners",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 231.12
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Mastercard à vista",
+        "NumberOfInstallments": 1,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Mastercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 1848.96
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Mastercard 2 vezes sem juros",
+        "NumberOfInstallments": 2,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Mastercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 924.48
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Mastercard 3 vezes sem juros",
+        "NumberOfInstallments": 3,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Mastercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 616.32
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Mastercard 4 vezes sem juros",
+        "NumberOfInstallments": 4,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Mastercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 462.24
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Mastercard 5 vezes sem juros",
+        "NumberOfInstallments": 5,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Mastercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 369.79
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Mastercard 6 vezes sem juros",
+        "NumberOfInstallments": 6,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Mastercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 308.16
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Mastercard 7 vezes sem juros",
+        "NumberOfInstallments": 7,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Mastercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 264.13
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Mastercard 8 vezes sem juros",
+        "NumberOfInstallments": 8,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Mastercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 231.12
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Hipercard à vista",
+        "NumberOfInstallments": 1,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Hipercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 1848.96
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Hipercard 2 vezes sem juros",
+        "NumberOfInstallments": 2,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Hipercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 924.48
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Hipercard 3 vezes sem juros",
+        "NumberOfInstallments": 3,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Hipercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 616.32
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Hipercard 4 vezes sem juros",
+        "NumberOfInstallments": 4,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Hipercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 462.24
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Hipercard 5 vezes sem juros",
+        "NumberOfInstallments": 5,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Hipercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 369.79
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Hipercard 6 vezes sem juros",
+        "NumberOfInstallments": 6,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Hipercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 308.16
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Hipercard 7 vezes sem juros",
+        "NumberOfInstallments": 7,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Hipercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 264.13
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Hipercard 8 vezes sem juros",
+        "NumberOfInstallments": 8,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Hipercard",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 231.12
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Elo à vista",
+        "NumberOfInstallments": 1,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Elo",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 1848.96
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Elo 2 vezes sem juros",
+        "NumberOfInstallments": 2,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Elo",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 924.48
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Elo 3 vezes sem juros",
+        "NumberOfInstallments": 3,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Elo",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 616.32
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Elo 4 vezes sem juros",
+        "NumberOfInstallments": 4,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Elo",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 462.24
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Elo 5 vezes sem juros",
+        "NumberOfInstallments": 5,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Elo",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 369.79
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Elo 6 vezes sem juros",
+        "NumberOfInstallments": 6,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Elo",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 308.16
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Elo 7 vezes sem juros",
+        "NumberOfInstallments": 7,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Elo",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 264.13
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Elo 8 vezes sem juros",
+        "NumberOfInstallments": 8,
+        "PaymentSystemGroupName": "creditCardPaymentGroup",
+        "PaymentSystemName": "Elo",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 231.12
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Pix à vista",
+        "NumberOfInstallments": 1,
+        "PaymentSystemGroupName": "instantPaymentPaymentGroup",
+        "PaymentSystemName": "Pix",
+        "TotalValuePlusInterestRate": 1664.06,
+        "Value": 1664.06
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Outros Pagamentos APP Vendedor (12x - s/ juros) à vista",
+        "NumberOfInstallments": 1,
+        "PaymentSystemGroupName": "custom210PaymentGroupPaymentGroup",
+        "PaymentSystemName": "Outros Pagamentos APP Vendedor (12x - s/ juros)",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 1848.96
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Outros Pagamentos APP Vendedor (12x - s/ juros) 2 vezes sem juros",
+        "NumberOfInstallments": 2,
+        "PaymentSystemGroupName": "custom210PaymentGroupPaymentGroup",
+        "PaymentSystemName": "Outros Pagamentos APP Vendedor (12x - s/ juros)",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 924.48
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Outros Pagamentos APP Vendedor (12x - s/ juros) 3 vezes sem juros",
+        "NumberOfInstallments": 3,
+        "PaymentSystemGroupName": "custom210PaymentGroupPaymentGroup",
+        "PaymentSystemName": "Outros Pagamentos APP Vendedor (12x - s/ juros)",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 616.32
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Outros Pagamentos APP Vendedor (12x - s/ juros) 4 vezes sem juros",
+        "NumberOfInstallments": 4,
+        "PaymentSystemGroupName": "custom210PaymentGroupPaymentGroup",
+        "PaymentSystemName": "Outros Pagamentos APP Vendedor (12x - s/ juros)",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 462.24
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Outros Pagamentos APP Vendedor (12x - s/ juros) 5 vezes sem juros",
+        "NumberOfInstallments": 5,
+        "PaymentSystemGroupName": "custom210PaymentGroupPaymentGroup",
+        "PaymentSystemName": "Outros Pagamentos APP Vendedor (12x - s/ juros)",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 369.79
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Outros Pagamentos APP Vendedor (12x - s/ juros) 6 vezes sem juros",
+        "NumberOfInstallments": 6,
+        "PaymentSystemGroupName": "custom210PaymentGroupPaymentGroup",
+        "PaymentSystemName": "Outros Pagamentos APP Vendedor (12x - s/ juros)",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 308.16
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Outros Pagamentos APP Vendedor (12x - s/ juros) 7 vezes sem juros",
+        "NumberOfInstallments": 7,
+        "PaymentSystemGroupName": "custom210PaymentGroupPaymentGroup",
+        "PaymentSystemName": "Outros Pagamentos APP Vendedor (12x - s/ juros)",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 264.13
+      },
+      {
+        "InterestRate": 0,
+        "Name": "Outros Pagamentos APP Vendedor (12x - s/ juros) 8 vezes sem juros",
+        "NumberOfInstallments": 8,
+        "PaymentSystemGroupName": "custom210PaymentGroupPaymentGroup",
+        "PaymentSystemName": "Outros Pagamentos APP Vendedor (12x - s/ juros)",
+        "TotalValuePlusInterestRate": 1848.96,
+        "Value": 231.12
+      }
+    ],
+    "refId": "4000076035",
+    "refIdSku": "150179_Fastshopbr",
+    "seller": {
+      "sellerId": "cnl222",
+      "sellerName": "Ponto"
+    },
+    "specifications": [
+      {
+        "name": "MARKETPLACESTORE",
+        "value": "Ponto"
+      },
+      {
+        "name": "sellerId",
+        "value": "1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "rt53": [
+    {
+      "timestamp": "2025-11-28T18:26:35.180Z",
+      "minPrice": 18.38,
+      "resultsCount": 9
+    },
+    {
+      "timestamp": "2025-11-28T18:26:59.798Z",
+      "minPrice": 18.38,
+      "resultsCount": 9
+    },
+    {
+      "timestamp": "2025-11-28T18:27:46.883Z",
+      "minPrice": 18.38,
+      "resultsCount": 9
+    },
+    {
+      "timestamp": "2025-11-28T18:59:46.261Z",
+      "minPrice": 56.9,
+      "resultsCount": 9
+    }
+  ],
+  "iphone 13": [
+    {
+      "timestamp": "2025-11-28T18:27:15.811Z",
+      "minPrice": 2087.15,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-29T11:49:05.360Z",
+      "minPrice": 2087.15,
+      "resultsCount": 10
+    }
+  ],
+  "tablet a9+": [
+    {
+      "timestamp": "2025-11-28T19:14:19.196Z",
+      "minPrice": 735.3,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-30T00:54:14.599Z",
+      "minPrice": 799,
+      "resultsCount": 14
+    },
+    {
+      "timestamp": "2025-11-30T00:54:22.733Z",
+      "minPrice": 799,
+      "resultsCount": 14
+    }
+  ],
+  "galaxy tab a9": [
+    {
+      "timestamp": "2025-11-29T11:49:44.536Z",
+      "minPrice": 683.05,
+      "resultsCount": 10
+    }
+  ],
+  "galaxy tab a9+": [
+    {
+      "timestamp": "2025-11-29T11:54:41.453Z",
+      "minPrice": 683.05,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-29T12:29:12.469Z",
+      "minPrice": 683.05,
+      "resultsCount": 10
+    }
+  ],
+  "galaxy tab s10": [
+    {
+      "timestamp": "2025-11-29T12:30:52.791Z",
+      "minPrice": 1664.06,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-29T16:57:51.831Z",
+      "minPrice": 0,
+      "resultsCount": 43
+    },
+    {
+      "timestamp": "2025-11-29T17:01:49.161Z",
+      "minPrice": 0,
+      "resultsCount": 43
+    },
+    {
+      "timestamp": "2025-11-29T17:14:20.210Z",
+      "minPrice": 19,
+      "resultsCount": 43
+    },
+    {
+      "timestamp": "2025-11-29T17:18:55.564Z",
+      "minPrice": 19,
+      "resultsCount": 43
+    },
+    {
+      "timestamp": "2025-11-29T17:31:05.495Z",
+      "minPrice": 19,
+      "resultsCount": 43
+    }
+  ],
+  "galaxy tab s10 lite": [
+    {
+      "timestamp": "2025-11-29T12:39:19.295Z",
+      "minPrice": 96.51,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-29T13:28:26.168Z",
+      "minPrice": 96.51,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-29T15:21:24.073Z",
+      "minPrice": 96.51,
+      "resultsCount": 25
+    }
+  ],
+  "iphone": [
+    {
+      "timestamp": "2025-11-29T14:06:58.235Z",
+      "minPrice": 3494,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-29T23:01:03.663Z",
+      "minPrice": 879,
+      "resultsCount": 43
+    }
+  ],
+  "tab s10 lite": [
+    {
+      "timestamp": "2025-11-29T14:59:48.623Z",
+      "minPrice": 96.51,
+      "resultsCount": 10
+    }
+  ],
+  "iphone 15": [
+    {
+      "timestamp": "2025-11-29T15:02:22.289Z",
+      "minPrice": 3397.08,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-29T15:05:49.169Z",
+      "minPrice": 89.9,
+      "resultsCount": 25
+    },
+    {
+      "timestamp": "2025-11-29T15:09:31.250Z",
+      "minPrice": 89.9,
+      "resultsCount": 25
+    },
+    {
+      "timestamp": "2025-11-29T17:13:49.432Z",
+      "minPrice": 89.9,
+      "resultsCount": 43
+    }
+  ],
+  "hd 8tb": [
+    {
+      "timestamp": "2025-11-29T15:02:53.277Z",
+      "minPrice": 256.62,
+      "resultsCount": 10
+    }
+  ],
+  "hd externo 8tb": [
+    {
+      "timestamp": "2025-11-29T15:03:16.532Z",
+      "minPrice": 256.62,
+      "resultsCount": 10
+    }
+  ],
+  "ssd externo 8tb": [
+    {
+      "timestamp": "2025-11-29T15:03:33.005Z",
+      "minPrice": 152.88,
+      "resultsCount": 10
+    },
+    {
+      "timestamp": "2025-11-29T15:05:07.645Z",
+      "minPrice": 41,
+      "resultsCount": 25
+    },
+    {
+      "timestamp": "2025-11-29T15:20:59.644Z",
+      "minPrice": 41,
+      "resultsCount": 25
+    }
+  ],
+  "galaxy tab s10 fe": [
+    {
+      "timestamp": "2025-11-29T16:25:17.055Z",
+      "minPrice": 37.71,
+      "resultsCount": 25
+    },
+    {
+      "timestamp": "2025-11-29T16:45:23.551Z",
+      "minPrice": 19,
+      "resultsCount": 43
+    },
+    {
+      "timestamp": "2025-11-29T16:51:04.654Z",
+      "minPrice": 19,
+      "resultsCount": 43
+    },
+    {
+      "timestamp": "2025-11-29T16:56:22.307Z",
+      "minPrice": 19,
+      "resultsCount": 43
+    }
+  ],
+  "galaxy a9": [
+    {
+      "timestamp": "2025-11-29T23:01:02.440Z",
+      "minPrice": 39,
+      "resultsCount": 40
+    }
+  ],
+  "galaxy a9+": [
+    {
+      "timestamp": "2025-11-29T23:47:41.670Z",
+      "minPrice": 69.9,
+      "resultsCount": 39
+    }
+  ],
+  "psr e": [],
+  "psr ew": []
+}
