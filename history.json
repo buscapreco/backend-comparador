@@ -128,6 +128,11 @@
       "timestamp": "2025-11-29T23:01:03.663Z",
       "minPrice": 879,
       "resultsCount": 43
+    },
+    {
+      "timestamp": "2025-12-01T13:43:34.859Z",
+      "minPrice": 879,
+      "resultsCount": 40
     }
   ],
   "tab s10 lite": [
@@ -227,5 +232,6 @@
     }
   ],
   "psr e": [],
-  "psr ew": []
+  "psr ew": [],
+  "psr ew320": []
 }

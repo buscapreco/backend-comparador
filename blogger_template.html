@@ -4,7 +4,7 @@
     2. Mude para o modo "Visualização HTML" (ícone <>).
     3. Cole todo o código abaixo.
     4. IMPORTANTE: Você precisa ter o backend (servidor Node.js) hospedado em algum lugar (ex: Render, Railway, Google Cloud).
-    5. Substitua 'https://SEU-BACKEND-AQUI.com' pela URL do seu servidor hospedado na variável API_BASE_URL abaixo.
+    5. Substitua 'https://backend-comparador.onrender.com' pela URL do seu servidor hospedado na variável API_BASE_URL abaixo.
 -->
 
 <style>
@@ -430,11 +430,17 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // ==========================================
-    // CONFIGURAÇÃO
+    // CONFIGURAÇÃO DE AMBIENTE
     // ==========================================
-    // Substitua pela URL do seu backend hospedado (ex: https://meu-app.onrender.com)
-    // Se estiver testando localmente, use http://localhost:3000
-    const API_BASE_URL = 'http://localhost:3001';
+    // Mude para 'true' para testar localmente.
+    // Mude para 'false' para usar a versão de produção (Render).
+    const IS_DEV_MODE = false;
+
+
+
+    const API_BASE_URL = IS_DEV_MODE
+        ? 'http://localhost:3000'
+        : 'https://backend-comparador.onrender.com';
     // ==========================================
 
     const searchInput = document.getElementById('searchInput');
