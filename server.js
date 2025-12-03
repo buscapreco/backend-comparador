@@ -13,25 +13,37 @@ app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
 
-// Configuração otimizada para memória baixa (Render Free Tier)
+// Configuração do Navegador
 const getLaunchOptions = () => {
     return {
         headless: 'new',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage', // Usa /tmp em vez de /dev/shm (Crucial para Docker)
+            '--disable-dev-shm-usage',
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
             '--single-process',
             '--disable-gpu'
         ],
-        // No Render, usamos o Chrome instalado pelo Dockerfile.
-        // Localmente, ele tenta achar sozinho ou você pode ajustar se der erro.
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || 'google-chrome-stable'
     };
 };
+
+// Função auxiliar para bloquear imagens e fontes (Economiza MUITA memória)
+async function configurePage(page) {
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+        if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) {
+            req.abort(); // Não baixa imagens nem estilos pesados
+        } else {
+            req.continue();
+        }
+    });
+    // User Agent simples
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+}
 
 // --- SCRAPERS ---
 
@@ -40,10 +52,9 @@ async function searchMercadoLivre(query) {
     try {
         browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
-        // User Agent simples
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+        await configurePage(page);
 
-        await page.goto(`https://lista.mercadolivre.com.br/${query}`, { waitUntil: 'domcontentloaded', timeout: 25000 });
+        await page.goto(`https://lista.mercadolivre.com.br/${query}`, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
         const products = await page.evaluate(() => {
             const items = document.querySelectorAll('.ui-search-layout__item');
@@ -52,6 +63,7 @@ async function searchMercadoLivre(query) {
                 const titleEl = item.querySelector('.ui-search-item__title') || item.querySelector('.poly-component__title');
                 const priceEl = item.querySelector('.andes-money-amount__fraction');
                 const linkEl = item.querySelector('a');
+                // Pegamos o src mesmo sem baixar a imagem
                 const imageEl = item.querySelector('img');
 
                 if (titleEl && priceEl && linkEl) {
@@ -76,15 +88,13 @@ async function searchMercadoLivre(query) {
 }
 
 async function searchAmazon(query) {
-    // Amazon é muito difícil de raspar sem plugins pesados. 
-    // Vamos tentar uma abordagem leve, se falhar, retorna vazio para não travar o servidor.
     let browser = null;
     try {
         browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+        await configurePage(page);
 
-        await page.goto(`https://www.amazon.com.br/s?k=${query}`, { waitUntil: 'domcontentloaded', timeout: 25000 });
+        await page.goto(`https://www.amazon.com.br/s?k=${query}`, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
         const products = await page.evaluate(() => {
             const items = document.querySelectorAll('[data-component-type="s-search-result"]');
@@ -122,24 +132,35 @@ app.get('/api/search', async (req, res) => {
 
     console.log(`Searching for: ${q}`);
 
-    // Executa APENAS 2 lojas inicialmente para testar a estabilidade da memória
-    // Se funcionar, podemos descomentar as outras depois
-    const scraperResults = await Promise.all([
-        searchMercadoLivre(q),
-        searchAmazon(q)
-    ]);
-
     const allResults = [];
     const status = { success: [], failed: [] };
 
-    scraperResults.forEach(result => {
-        if (result.success && result.results.length > 0) {
-            status.success.push(result.store);
-            allResults.push(...result.results);
+    // --- MUDANÇA CRUCIAL: EXECUÇÃO SEQUENCIAL ---
+    // Faz um de cada vez para não estourar a memória
+
+    // 1. Mercado Livre
+    try {
+        const mlRes = await searchMercadoLivre(q);
+        if (mlRes.success) {
+            status.success.push(mlRes.store);
+            allResults.push(...mlRes.results);
         } else {
-            status.failed.push(result.store);
+            status.failed.push(mlRes.store);
         }
-    });
+    } catch (e) { status.failed.push('Mercado Livre'); }
+
+    // 2. Amazon
+    try {
+        const amzRes = await searchAmazon(q);
+        if (amzRes.success) {
+            status.success.push(amzRes.store);
+            allResults.push(...amzRes.results);
+        } else {
+            status.failed.push(amzRes.store);
+        }
+    } catch (e) { status.failed.push('Amazon Brasil'); }
+
+    // --- FIM DA EXECUÇÃO SEQUENCIAL ---
 
     // Lógica de Filtro
     const normalize = (str) => str ? str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
