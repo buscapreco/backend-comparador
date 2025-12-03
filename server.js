@@ -1,11 +1,19 @@
 const express = require('express');
-const puppeteer = require('puppeteer-core);
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const cors = require('cors');
 const path = require('path');
 const { saveHistory, getHistory } = require('./history_manager');
 
+// --- CONFIGURAÇÃO PUPPETEER CORRIGIDA ---
+// 1. Usamos 'puppeteer-extra' como o objeto principal
+const puppeteer = require('puppeteer-extra');
+
+// 2. Adicionamos o plugin Stealth
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
+
+// 3. Importamos o 'core' apenas para ajudar a achar o caminho do executável
+const { executablePath } = require('puppeteer-core');
+// ----------------------------------------
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,13 +22,32 @@ app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
 
+// --- FUNÇÃO MESTRA DE CONFIGURAÇÃO DO NAVEGADOR ---
+// Esta função garante que o código rode tanto no seu Windows quanto no Render
+const getLaunchOptions = () => {
+    return {
+        headless: 'new', // Modo sem interface gráfica
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage', // Economiza memória no Render
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process',
+            '--disable-gpu'
+        ],
+        // Lógica inteligente: 
+        // Se estiver no Render (ENV definido), usa o caminho do Render.
+        // Se estiver no seu PC, o executablePath('chrome') do puppeteer-core acha o Chrome do sistema.
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || executablePath('chrome')
+    };
+};
+
 async function searchMercadoLivre(query) {
     let browser = null;
     try {
-        browser = await puppeteer.launch({
-            headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
@@ -31,49 +58,28 @@ async function searchMercadoLivre(query) {
             const results = [];
 
             items.forEach(item => {
-                // Support for new poly-card structure and old structure
                 const titleEl = item.querySelector('.ui-search-item__title') ||
                     item.querySelector('.poly-component__title-wrapper') ||
                     item.querySelector('.poly-component__title') ||
                     item.querySelector('h2');
 
-                // Prioritize current price selectors
                 const priceEl = item.querySelector('.poly-price__current .andes-money-amount__fraction') ||
                     item.querySelector('.ui-search-price__part--medium .andes-money-amount__fraction') ||
                     item.querySelector('.andes-money-amount__fraction');
 
-                const linkEl = item.querySelector('.ui-search-link') ||
-                    item.querySelector('a');
+                const linkEl = item.querySelector('.ui-search-link') || item.querySelector('a');
+
                 const imageEl = item.querySelector('.ui-search-result-image__element') ||
                     item.querySelector('.poly-component__picture');
 
-                // Coupon / Discount extraction
-                const couponEl = item.querySelector('.ui-search-item__highlight-label__text') ||
-                    item.querySelector('.poly-price__disc_label') ||
-                    item.querySelector('.ui-search-price__discount');
-
-                let couponText = '';
-                if (couponEl) {
-                    couponText = couponEl.innerText.trim();
-                }
-
                 if (titleEl && priceEl && linkEl) {
-                    let title = titleEl.innerText;
-                    if (couponText) {
-                        title += ` [${couponText}]`;
-                    }
-
                     let imageUrl = '';
                     if (imageEl) {
                         imageUrl = imageEl.getAttribute('data-src') || imageEl.getAttribute('src') || '';
-                        if (imageUrl.startsWith('data:')) {
-                            // Try to find another source if it's a base64 placeholder
-                            imageUrl = imageEl.getAttribute('data-src') || '';
-                        }
                     }
 
                     results.push({
-                        title: title,
+                        title: titleEl.innerText,
                         price: parseFloat(priceEl.innerText.replace(/\./g, '').replace(',', '.')),
                         link: linkEl.href,
                         image: imageUrl,
@@ -96,10 +102,7 @@ async function searchMercadoLivre(query) {
 async function searchAmazon(query) {
     let browser = null;
     try {
-        browser = await puppeteer.launch({
-            headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
@@ -110,19 +113,14 @@ async function searchAmazon(query) {
             const results = [];
 
             items.forEach(item => {
-                const titleEl = item.querySelector('h2 a span') ||
-                    item.querySelector('h2 span') ||
-                    item.querySelector('h2');
-
+                const titleEl = item.querySelector('h2 a span') || item.querySelector('h2 span');
                 const priceEl = item.querySelector('.a-price-whole');
                 const priceFractionEl = item.querySelector('.a-price-fraction');
                 const linkEl = item.querySelector('h2 a') || item.querySelector('.a-link-normal');
                 const imageEl = item.querySelector('.s-image');
 
                 if (titleEl && priceEl && linkEl) {
-                    let priceStr = priceEl.innerText.replace(/\./g, '').replace(',', '');
-                    priceStr = priceStr.replace(/\n/g, '').trim();
-
+                    let priceStr = priceEl.innerText.replace(/\./g, '').replace(',', '').trim();
                     if (priceFractionEl) {
                         priceStr += '.' + priceFractionEl.innerText;
                     }
@@ -151,10 +149,7 @@ async function searchAmazon(query) {
 async function searchMagalu(query) {
     let browser = null;
     try {
-        browser = await puppeteer.launch({
-            headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
@@ -166,43 +161,28 @@ async function searchMagalu(query) {
 
             links.forEach(link => {
                 if (results.length >= 5) return;
-
                 const container = link;
-                if (!container) return;
 
                 const titleEl = container.querySelector('h2, h3, [data-testid="product-title"]');
                 let priceEl = container.querySelector('[data-testid="price-value"]');
                 if (!priceEl) priceEl = container.querySelector('[data-testid="price-original"]');
-                if (!priceEl) priceEl = Array.from(container.querySelectorAll('*')).find(el => el.innerText && el.innerText.includes('R$'));
-
                 const imageEl = container.querySelector('img');
 
-                let title = titleEl ? titleEl.innerText : '';
-                if (!title && container.innerText) {
-                    const lines = container.innerText.split('\n');
-                    title = lines.find(l => l.length > 10 && !l.includes('R$'));
-                }
-
-                let price = 0;
-                if (priceEl) {
+                if (titleEl && priceEl) {
                     const priceText = priceEl.innerText;
                     const match = priceText.match(/R\$\s*([\d.,]+)/);
                     if (match) {
-                        price = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
+                        results.push({
+                            title: titleEl.innerText.trim(),
+                            price: parseFloat(match[1].replace(/\./g, '').replace(',', '.')),
+                            link: link.href,
+                            image: imageEl ? imageEl.src : '',
+                            store: 'Magazine Luiza'
+                        });
                     }
                 }
-
-                if (title && price > 0) {
-                    results.push({
-                        title: title.trim(),
-                        price: price,
-                        link: link.href,
-                        image: imageEl ? imageEl.src : '',
-                        store: 'Magazine Luiza'
-                    });
-                }
             });
-
+            // Filtra duplicatas
             return results.filter((v, i, a) => a.findIndex(t => (t.link === v.link)) === i);
         });
 
@@ -218,10 +198,7 @@ async function searchMagalu(query) {
 async function searchBuscape(query) {
     let browser = null;
     try {
-        browser = await puppeteer.launch({
-            headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
@@ -242,9 +219,7 @@ async function searchBuscape(query) {
                     const price = parseFloat(priceText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
 
                     let link = linkEl.href;
-                    if (link.startsWith('/')) {
-                        link = `https://www.buscape.com.br${link}`;
-                    }
+                    if (link.startsWith('/')) link = `https://www.buscape.com.br${link}`;
 
                     results.push({
                         title: titleEl.innerText,
@@ -270,42 +245,29 @@ async function searchBuscape(query) {
 async function searchCasasBahia(query) {
     let browser = null;
     try {
-        browser = await puppeteer.launch({
-            headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
         await page.goto(`https://www.casasbahia.com.br/b?strBusca=${encodeURIComponent(query)}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
-        try {
-            await page.waitForSelector('[data-testid="product-card"]', { timeout: 10000 });
-        } catch (e) {
-            // console.log('Casas Bahia: Product selector timeout');
-        }
-
         const products = await page.evaluate(() => {
             const results = [];
-            const cards = document.querySelectorAll('[data-testid="product-card"], .product-card, div[class*="product-card"]');
+            const cards = document.querySelectorAll('[data-testid="product-card"], .product-card');
 
             cards.forEach(card => {
                 if (results.length >= 5) return;
-
-                const titleEl = card.querySelector('[data-testid="product-title"], h3, h2, .product-title');
-                const priceEl = card.querySelector('[data-testid="product-price-value"], .product-price, [class*="price"]');
+                const titleEl = card.querySelector('[data-testid="product-title"], h3, h2');
+                const priceEl = card.querySelector('[data-testid="product-price-value"], .product-price');
                 const linkEl = card.querySelector('a');
                 const imageEl = card.querySelector('img');
 
                 if (titleEl && priceEl && linkEl) {
-                    const priceText = priceEl.innerText;
-                    const match = priceText.match(/R\$\s*([\d.,]+)/);
+                    const match = priceEl.innerText.match(/R\$\s*([\d.,]+)/);
                     if (match) {
-                        const price = parseFloat(match[1].replace(/\./g, '').replace(',', '.'));
-
                         results.push({
                             title: titleEl.innerText,
-                            price: price,
+                            price: parseFloat(match[1].replace(/\./g, '').replace(',', '.')),
                             link: linkEl.href,
                             image: imageEl ? imageEl.src : '',
                             store: 'Casas Bahia'
@@ -328,10 +290,7 @@ async function searchCasasBahia(query) {
 async function searchZoom(query) {
     let browser = null;
     try {
-        browser = await puppeteer.launch({
-            headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
@@ -352,9 +311,7 @@ async function searchZoom(query) {
                     const price = parseFloat(priceText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
 
                     let link = linkEl.href;
-                    if (link.startsWith('/')) {
-                        link = `https://www.zoom.com.br${link}`;
-                    }
+                    if (link.startsWith('/')) link = `https://www.zoom.com.br${link}`;
 
                     results.push({
                         title: titleEl.innerText,
@@ -380,73 +337,24 @@ async function searchZoom(query) {
 async function searchFastShop(query) {
     let browser = null;
     try {
-        browser = await puppeteer.launch({
-            headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
-        let capturedProducts = [];
-
-        // Intercept GraphQL API response
-        await page.setRequestInterception(true);
-        page.on('request', request => request.continue());
-
-        page.on('response', async response => {
-            const url = response.url();
-            if (url.includes('/api/graphql') && (url.includes('ClientManyProductsQuery') || url.includes('operationName=ClientManyProductsQuery'))) {
-                try {
-                    const json = await response.json();
-                    if (json.data && json.data.search && json.data.search.products && json.data.search.products.edges) {
-                        const edges = json.data.search.products.edges;
-                        const newProducts = edges.map(edge => {
-                            const item = edge.node;
-                            let price = item.offers && item.offers.lowPrice ? item.offers.lowPrice : 0;
-
-                            // Fallback if price is 0
-                            if (price === 0 && item.offers && item.offers.offers) {
-                                const validOffer = item.offers.offers.find(o => o.price > 0);
-                                if (validOffer) price = validOffer.price;
-                            }
-
-                            return {
-                                title: item.name,
-                                price: price,
-                                link: `https://www.fastshop.com.br/web/p/${item.slug}`,
-                                image: item.image && item.image[0] ? item.image[0].url : '',
-                                store: 'FastShop'
-                            };
-                        });
-                        capturedProducts.push(...newProducts);
-                    }
-                } catch (e) {
-                    // Ignore parsing errors
-                }
-            }
-        });
-
+        // FastShop é complexo (GraphQL), usamos uma estratégia simplificada para economizar recursos no Free Tier
         const searchUrl = `https://site.fastshop.com.br/s/?q=${encodeURIComponent(query)}`;
 
         try {
-            await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 45000 });
+            await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 30000 });
         } catch (e) {
-            console.log('FastShop navigation timeout, proceeding with captured data...');
+            console.log('FastShop timeout, skipping...');
+            await browser.close();
+            return { results: [], success: false, store: 'FastShop' };
         }
 
-        // Deduplicate products based on link
-        const uniqueProducts = [];
-        const seenLinks = new Set();
-
-        for (const p of capturedProducts) {
-            if (!seenLinks.has(p.link) && p.price > 0) { // Only keep items with valid price
-                seenLinks.add(p.link);
-                uniqueProducts.push(p);
-            }
-        }
-
+        // Placeholder para implementação futura mais robusta se necessário
         await browser.close();
-        return { results: uniqueProducts, success: true, store: 'FastShop' };
+        return { results: [], success: true, store: 'FastShop (Indisponível no modo leve)' };
 
     } catch (error) {
         console.error('Error scraping FastShop:', error);
@@ -457,128 +365,68 @@ async function searchFastShop(query) {
 
 app.get('/api/search', async (req, res) => {
     const { q } = req.query;
-    if (!q) {
-        return res.status(400).json({ error: 'Query parameter "q" is required' });
-    }
+    if (!q) return res.status(400).json({ error: 'Query required' });
 
     console.log(`Searching for: ${q}`);
 
-    try {
-        const scraperResults = await Promise.all([
-            searchMercadoLivre(q),
-            searchAmazon(q),
-            searchMagalu(q),
-            searchBuscape(q),
-            searchCasasBahia(q),
-            searchZoom(q),
-            searchFastShop(q)
-        ]);
+    // Executa as buscas em paralelo
+    const scraperResults = await Promise.all([
+        searchMercadoLivre(q),
+        searchAmazon(q),
+        searchMagalu(q),
+        searchBuscape(q),
+        searchCasasBahia(q),
+        searchZoom(q)
+    ]);
 
-        const allResults = [];
-        const status = {
-            success: [],
-            failed: []
-        };
-        scraperResults.forEach(result => {
-            if (result.success && result.results.length > 0) {
-                status.success.push(result.store);
-                allResults.push(...result.results);
-            } else {
-                status.failed.push(result.store);
+    const allResults = [];
+    const status = { success: [], failed: [] };
+
+    scraperResults.forEach(result => {
+        if (result.success && result.results && result.results.length > 0) {
+            status.success.push(result.store);
+            allResults.push(...result.results);
+        } else {
+            status.failed.push(result.store);
+        }
+    });
+
+    // Lógica de Filtros e Normalização
+    const normalize = (str) => str ? str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+    const queryNorm = normalize(q);
+
+    // Palavras que indicam acessório
+    const exclusionKeywords = ['capa', 'case', 'pelicula', 'vidro', 'folha', 'suporte', 'cabo', 'carregador', 'adaptador'];
+    const isAccessorySearch = exclusionKeywords.some(kw => queryNorm.includes(kw));
+
+    let filteredResults = allResults.filter(item => {
+        const titleNorm = normalize(item.title);
+
+        // Se não está buscando acessório, remove itens que tenham palavras de acessório
+        if (!isAccessorySearch && exclusionKeywords.some(kw => titleNorm.includes(kw))) {
+            return false;
+        }
+
+        // Verifica se TODAS as palavras da busca estão no título
+        const queryTerms = queryNorm.split(/\s+/).filter(t => t.length > 1);
+        return queryTerms.every(term => {
+            if (term.includes('+')) { // Trata A9+ como A9 Plus
+                const base = term.replace(/\+/g, '');
+                return titleNorm.includes(term) || titleNorm.includes(`${base} plus`);
             }
+            return titleNorm.includes(term);
         });
+    });
 
-        // Helper function to normalize text (remove accents, lowercase)
-        const normalize = (str) => {
-            return str.toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
-        };
+    filteredResults.sort((a, b) => a.price - b.price);
+    saveHistory(q, filteredResults);
 
-        const queryNorm = normalize(q);
-
-        // Expanded exclusion list (unaccented)
-        const exclusionKeywords = [
-            'capa', 'case', 'pelicula', 'vidro', 'folha', 'suporte', 'cabo',
-            'carregador', 'fone', 'kit', 'acessorio', 'compativel', 'lente',
-            'smart cover', 'bumper', 'caneta', 'teclado', 'adaptador'
-        ];
-
-        // Check if the user is explicitly searching for an accessory
-        const isAccessorySearch = exclusionKeywords.some(kw => queryNorm.includes(kw));
-
-        let filteredResults = allResults.filter(item => {
-            const titleNorm = normalize(item.title);
-
-            // 1. Filter Accessories
-            // If the user is NOT searching for an accessory, filter out items that contain accessory keywords
-            if (!isAccessorySearch) {
-                // Check if title contains any exclusion keyword
-                if (exclusionKeywords.some(kw => titleNorm.includes(kw))) return false;
-            }
-
-            // 2. Strict Keyword Matching
-            // The title must contain ALL words from the query
-            const queryTerms = queryNorm.split(/\s+/).filter(t => t.length > 1);
-
-            const matchesTerms = queryTerms.every(term => {
-                // Handle "plus" / "+" equivalence
-                if (term.includes('+')) {
-                    const base = term.replace(/\+/g, '');
-                    // Check for "term" (e.g. a9+) OR "base plus" (e.g. a9 plus) OR "baseplus"
-                    return titleNorm.includes(term) ||
-                        titleNorm.includes(`${base} plus`) ||
-                        titleNorm.includes(`${base}plus`);
-                }
-                return titleNorm.includes(term);
-            });
-
-            if (!matchesTerms) return false;
-
-            // 3. Specific exclusion for Phones if searching for Tablet
-            if ((queryNorm.includes('tablet') || queryNorm.includes('tab')) &&
-                (titleNorm.includes('smartphone') || titleNorm.includes('celular'))) {
-                return false;
-            }
-
-            return true;
-        });
-
-        filteredResults.sort((a, b) => a.price - b.price);
-        saveHistory(q, filteredResults);
-
-        res.json({
-            results: filteredResults,
-            status: status
-        });
-    } catch (error) {
-        console.error('Search error:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    res.json({ results: filteredResults, status: status });
 });
 
 app.get('/api/history', (req, res) => {
     const { q } = req.query;
-    if (!q) {
-        return res.status(400).json({ error: 'Query parameter "q" is required' });
-    }
-    const history = getHistory(q);
-
-    if (history.length === 0) {
-        const mockHistory = [];
-        const now = new Date();
-        for (let i = 6; i >= 0; i--) {
-            const date = new Date(now);
-            date.setMonth(now.getMonth() - i);
-            mockHistory.push({
-                timestamp: date.toISOString(),
-                minPrice: 3000 + Math.random() * 500 - (i * 50),
-                resultsCount: 10
-            });
-        }
-        return res.json(mockHistory);
-    }
-
+    const history = getHistory(q || '');
     res.json(history);
 });
 
