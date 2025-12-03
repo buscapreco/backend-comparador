@@ -2,9 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const { saveHistory, getHistory } = require('./history_manager');
 
-// --- VERSÃO ULTRA-LEVE (SEM PLUGINS) ---
+// --- VERSÃO ULTRA-LEVE (PUPPETEER CORE PURO) ---
 const puppeteer = require('puppeteer-core');
-// ----------------------------------------
+// -----------------------------------------------
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,38 +13,37 @@ app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
 
-// Configuração para MÁXIMA economia de memória
+// CONFIGURAÇÃO DO NAVEGADOR (OTIMIZADA PARA MEMÓRIA)
 const getLaunchOptions = () => {
     return {
         headless: 'new',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage', // Importante para Docker
+            '--disable-dev-shm-usage', // Usa o disco tmp em vez da RAM (Crucial para Docker/Render)
             '--disable-accelerated-2d-canvas',
-            '--disable-gpu',
             '--no-first-run',
             '--no-zygote',
             '--single-process',
-            '--disable-extensions'
+            '--disable-gpu'
         ],
+        // No Render, usa o Chrome instalado. Localmente, tenta achar.
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || 'google-chrome-stable'
     };
 };
 
-// Bloqueador de recursos pesados
+// BLOQUEADOR DE RECURSOS (Imagens, Fontes, CSS)
+// Isso economiza MUITA memória e banda
 async function configurePage(page) {
     await page.setRequestInterception(true);
     page.on('request', (req) => {
-        const type = req.resourceType();
-        // Bloqueia imagens, fontes e estilos para economizar RAM e Banda
-        if (['image', 'stylesheet', 'font', 'media', 'imageset'].includes(type)) {
-            req.abort();
+        if (['image', 'stylesheet', 'font', 'media', 'imageset'].includes(req.resourceType())) {
+            req.abort(); // Bloqueia o download
         } else {
             req.continue();
         }
     });
-    // User Agent simples
+    // User Agent simples para compatibilidade
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 }
 
@@ -57,7 +56,6 @@ async function searchMercadoLivre(query) {
         const page = await browser.newPage();
         await configurePage(page);
 
-        // Timeout reduzido para falhar rápido se travar
         await page.goto(`https://lista.mercadolivre.com.br/${query}`, { waitUntil: 'domcontentloaded', timeout: 20000 });
 
         const products = await page.evaluate(() => {
@@ -92,11 +90,12 @@ async function searchMercadoLivre(query) {
 async function searchAmazon(query) {
     let browser = null;
     try {
+        console.log('Iniciando busca na Amazon...');
         browser = await puppeteer.launch(getLaunchOptions());
         const page = await browser.newPage();
         await configurePage(page);
 
-        await page.goto(`https://www.amazon.com.br/s?k=${query}`, { waitUntil: 'domcontentloaded', timeout: 20000 });
+        await page.goto(`https://www.amazon.com.br/s?k=${query}`, { waitUntil: 'domcontentloaded', timeout: 25000 });
 
         const products = await page.evaluate(() => {
             const items = document.querySelectorAll('[data-component-type="s-search-result"]');
@@ -112,7 +111,7 @@ async function searchAmazon(query) {
                         title: titleEl.innerText,
                         price: priceVal,
                         link: linkEl.href,
-                        image: '',
+                        image: '', // Sem imagem para economizar
                         store: 'Amazon Brasil'
                     });
                 }
@@ -120,6 +119,7 @@ async function searchAmazon(query) {
             return results.slice(0, 5);
         });
         await browser.close();
+        console.log('Amazon finalizado com sucesso.');
         return { results: products, success: true, store: 'Amazon Brasil' };
     } catch (error) {
         console.error('Amazon Error:', error.message);
@@ -137,21 +137,45 @@ app.get('/api/search', async (req, res) => {
     const allResults = [];
     const status = { success: [], failed: [] };
 
-    // EXECUÇÃO SEQUENCIAL (Um por vez)
+    // --- TESTE DE ISOLAMENTO ---
+
+    // 1. Mercado Livre (DESATIVADO TEMPORARIAMENTE)
+    /*
     try {
         const mlRes = await searchMercadoLivre(q);
         if (mlRes.success) { status.success.push(mlRes.store); allResults.push(...mlRes.results); }
         else { status.failed.push('Mercado Livre'); }
     } catch (e) { status.failed.push('Mercado Livre'); }
+    */
 
+    // 2. Amazon (ATIVO)
     try {
         const amzRes = await searchAmazon(q);
-        if (amzRes.success) { status.success.push(amzRes.store); allResults.push(...amzRes.results); }
-        else { status.failed.push('Amazon Brasil'); }
+        if (amzRes.success) {
+            status.success.push(amzRes.store);
+            allResults.push(...amzRes.results);
+        } else {
+            status.failed.push('Amazon Brasil');
+        }
     } catch (e) { status.failed.push('Amazon Brasil'); }
 
-    // Normalização e Ordenação
-    let filteredResults = allResults.sort((a, b) => a.price - b.price);
+    // --- FIM DO BLOCO DE TESTE ---
+
+    // Filtros e Ordenação
+    const normalize = (str) => str ? str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+    const queryNorm = normalize(q);
+    const exclusionKeywords = ['capa', 'case', 'pelicula', 'vidro', 'suporte', 'cabo'];
+    const isAccessorySearch = exclusionKeywords.some(kw => queryNorm.includes(kw));
+
+    let filteredResults = allResults.filter(item => {
+        const titleNorm = normalize(item.title);
+        if (!isAccessorySearch && exclusionKeywords.some(kw => titleNorm.includes(kw))) return false;
+
+        const queryTerms = queryNorm.split(/\s+/).filter(t => t.length > 1);
+        return queryTerms.every(term => titleNorm.includes(term));
+    });
+
+    filteredResults.sort((a, b) => a.price - b.price);
     saveHistory(q, filteredResults);
 
     res.json({ results: filteredResults, status: status });
